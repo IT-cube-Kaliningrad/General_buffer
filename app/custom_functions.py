@@ -1,6 +1,6 @@
 import os
 
-os_translate = {'nt' : 'Windows', 'posix' : 'Linux', 'mac' : 'MacOS'}
+os_translate = {'nt' : 'Windows', 'posix' : 'Linux', 'mac' : 'MacOS', 'os2' : 'os2', 'ce' : 'ce', 'java' : 'java'}
 
 def get_ip(OS):
     if OS == 'posix' or OS == 'mac':
@@ -17,3 +17,6 @@ def get_ip(OS):
             text = text.split('\n')
             ip = text[len(text) - 3].split(':')[1]
             return ip.replace(' ', '')
+    else:
+        print('Не поддерживаемая платформа')
+        return '127.0.0.1'
