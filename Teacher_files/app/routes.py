@@ -1,0 +1,5 @@
+from server import app
+
+@app.route('/')
+def main():
+    return 'Hello world!'
