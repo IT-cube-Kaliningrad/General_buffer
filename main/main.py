@@ -1,38 +1,56 @@
-from tkinter import*
-from main_settings import*
+from tkinter import Tk, Label, messagebox, LEFT
 import keyboard
 import requests
+import configparser
+import sys
 
-# Функция для потравки данных на сервер
+
+# Функция для отправки данных на сервер
 def send_data(data):
-    requests.post(SERVER_ADRESS, json={'data': data})
+    requests.post(f'http://{SERVER_IP}:{SERVER_PORT}/', json={'data': data})
 
-# Основное окно
-tk = Tk()
-tk.title('Teacher')
-tk.geometry('150x0')
-tk.wm_attributes('-alpha', float(SHOW_WINDOW))
-tk.wm_attributes('-topmost', True)
-
-# Пока что пустая переменная с данными из буфера
-bufer_data = None
-
-# Текстовая метка с содержимым bufer_data
-bufer_label = Label(tk, text=bufer_data, justify=LEFT)
-bufer_label.grid(row=0, column=0)
-
-# Чтение из буфера
-def read(e):
+# Функция чтения буфера
+def read_clipboard(e):
     global bufer_data
-    bufer_data = tk.clipboard_get()
-    send_data(bufer_data)
-    if SHOW_BUFER_DATA:
-        bufer_label['text'] = bufer_data
-        tk.update()
+    # Получение записи из буфера
+    bufer_data = root.clipboard_get()
+    # Отправка данных на сервер
+    try:
+        send_data(bufer_data)
+    except requests.exceptions.ConnectionError as e:
+        messagebox.showerror(title='Ошибка', message=f'Ошибка отправки данных на сервер\nСкорее всего, вы указали неверный адрес сервера')
+    # Изменение текста Label в root
+    bufer_label['text'] = bufer_data
 
-if ADD_CUSTOM_KEY:
-    keyboard.hook_key(CUSTOM_KEY, read)
-else:
-    keyboard.hook_key('c', read)
 
-tk.mainloop()
+if __name__ == '__main__':
+    # Инициализация класса для чтения конфигурационных файлов
+    config = configparser.ConfigParser()
+    config.read('main_settings.conf')
+    # Установка переменных
+    try:
+        SHOW_WINDOW = config['Window']['SHOW_WINDOW']
+        KEY = config['Key']['KEY']
+        SERVER_IP = config['Server']['SERVER_IP']
+        SERVER_PORT = config['Server']['SERVER_PORT']
+    except KeyError:
+        messagebox.showerror(title='Ошибка', message=f'Не правильно составлен файл конфигурации main_settings.conf')
+        sys.exit()
+
+    # Создание основного окна
+    root = Tk()
+    root.title('Main')
+    root.geometry('150x0')
+    # Установка прозрачности
+    root.wm_attributes('-alpha', float(SHOW_WINDOW))
+    # Для того, чтобы окно было всегда поверх других. Это нужно для корректного захвата клавиши
+    root.wm_attributes('-topmost', True)
+
+    # Текстовая метка
+    bufer_label = Label(root, text=None, justify='left')
+    bufer_label.grid(row=0, column=0)
+
+    # Захват клавиши
+    keyboard.hook_key(KEY, read_clipboard)
+
+    root.mainloop()
