@@ -1,8 +1,8 @@
 # Создание окна
-SHOW_WINDOW = 1
+SHOW_WINDOW = 0
 
 # Отображение записи в окне
-SHOW_BUFER_DATA = 1
+SHOW_BUFER_DATA = SHOW_WINDOW
 
 # Добавление кастомизированных клавиш для копирования записи из буфера
 ADD_CUSTOM_KEY = 1
@@ -11,4 +11,4 @@ ADD_CUSTOM_KEY = 1
 CUSTOM_KEY = 'c'
 
 # Адрес сайта/сервера
-SERVER_ADRESS = 'http://192.168.137.77:5000/'
+SERVER_ADRESS = 'http://192.168.1.111:5000/'
