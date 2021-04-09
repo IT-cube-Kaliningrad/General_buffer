@@ -1,7 +1,7 @@
 # Переменные окружения
 #   FLASK
     export FLASK_APP=server/server.py
-    export FLASK_ENV=production
+    export FLASK_ENV=development
     export FLASK_DEBUG=0
 #   SERVER
     export SERVER_HOST=127.0.0.1
