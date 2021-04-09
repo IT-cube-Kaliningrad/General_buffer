@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/kardfox/Рабочий стол/IT-Cube_Project/Teacher_files/venv/bin/python3" "$0" "$@"
+'''exec' "/home/kardfox/Рабочий стол/IT-Cube_Project/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
