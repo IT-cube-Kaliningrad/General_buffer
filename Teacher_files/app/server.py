@@ -1,6 +1,6 @@
 from flask import Flask
 
-#Инициализация Flask
+# Инициализация Flask
 app = Flask(__name__)
-#Инициализация routes
+# Инициализация routes
 import routes
