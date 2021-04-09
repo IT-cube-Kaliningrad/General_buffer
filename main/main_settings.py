@@ -1,5 +1,5 @@
 # Создание окна
-SHOW_WINDOW = 0
+SHOW_WINDOW = 1
 
 # Отображение записи в окне
 SHOW_BUFER_DATA = SHOW_WINDOW
@@ -11,4 +11,4 @@ ADD_CUSTOM_KEY = 1
 CUSTOM_KEY = 'c'
 
 # Адрес сайта/сервера
-SERVER_ADRESS = 'http://192.168.1.111:5000/'
+SERVER_ADRESS = 'http://127.0.0.1/'
