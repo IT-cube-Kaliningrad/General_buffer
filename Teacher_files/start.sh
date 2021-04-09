@@ -1,6 +1,6 @@
 # Переменные окружения
 #   FLASK
-    export FLASK_APP=app/server.py
+    export FLASK_APP=server/server.py
     export FLASK_ENV=development
     export FLASK_DEBUG=1
 #   SERVER

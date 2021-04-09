@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <head>
+            <title>
+                Student
+            </title>
+        </head>
+        <textarea id="Text" style="height: 500px; width: 700px;">{{ data }}</textarea>
+        <button onclick="copyTheText()" style="display: block; margin-top: 10px;">Copy text</button> 
+    </body>
+</html>
+<script>
+    function copyTheText() {
+        var copyText = document.getElementById("Text");
+        copyText.select();
+        document.execCommand("copy");
+} 
+</script>

