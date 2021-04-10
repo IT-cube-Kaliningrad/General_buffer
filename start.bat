@@ -1,9 +1,6 @@
 : Режим "Ни слова по-русски"
 @echo off
 
-: Запуск виртуального окружения
-venv\Scripts\activate
-
 : Переменные окружения
 :   FLASK
     set FLASK_APP=server/server.py
@@ -15,4 +12,3 @@ venv\Scripts\activate
 
 : Запуск
 flask run --host %SERVER_HOST%
-deactivate
