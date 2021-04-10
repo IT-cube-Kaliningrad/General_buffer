@@ -1,3 +1,6 @@
+# Запуск виртуального окружения
+. venv/bin/activate
+
 # Переменные окружения
 #   FLASK
     export FLASK_APP=server/server.py
@@ -9,3 +12,4 @@
 
 # Запуск
 flask run --host $SERVER_HOST
+deactivate
