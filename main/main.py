@@ -1,8 +1,7 @@
-from tkinter import Tk, Label, messagebox, LEFT
+from tkinter import Tk
 import keyboard
 import requests
 import configparser
-import sys
 
 def send_data(event):
     bufer_data = root.clipboard_get()
