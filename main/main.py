@@ -6,10 +6,9 @@ import configparser
 
 def send_data(event):
     try:
-        if event.modifiers[0] == 'ctrl' and event.name == 'c':
-            bufer_data = root.clipboard_get()
-            adress = f'http://{SERVER_IP}:{SERVER_PORT}/'
-            requests.post(adress, json={'data': bufer_data})
+        bufer_data = root.clipboard_get()
+        adress = f'http://{SERVER_IP}:{SERVER_PORT}/'
+        requests.post(adress, json={'data': bufer_data})
     except requests.exceptions.ConnectionError as e:
             print(e)
             messagebox.showerror(title='Ошибка', message='Не удается подключится к хосту',)
@@ -32,7 +31,7 @@ def main():
     root.resizable(width=False, height=False)
     root.wm_attributes('-alpha', float(SHOW_WINDOW))
     root.wm_attributes('-topmost', True)
-    keyboard.hook(send_data)
+    keyboard.hook_key('c', send_data)
     root.mainloop()
 
 if __name__ == '__main__':
