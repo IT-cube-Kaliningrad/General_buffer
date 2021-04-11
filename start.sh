@@ -1,6 +1,3 @@
-# Запуск виртуального окружения
-. venv/bin/activate
-
 # Переменные окружения
 #   FLASK
     export FLASK_APP=server/server.py
@@ -10,5 +7,4 @@
     export SERVER_HOST=127.0.0.1
     export FLASK_RUN_PORT=5000
 
-# Запуск
 flask run --host $SERVER_HOST
