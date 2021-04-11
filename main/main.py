@@ -1,31 +1,50 @@
-from tkinter import Tk
+from tkinter import Tk, messagebox
 import keyboard
 import requests
 import configparser
 
+
 def send_data(event):
-    bufer_data = root.clipboard_get()
-    adress = f'http://{SERVER_IP}:{SERVER_PORT}/'
-    requests.post(adress, json={'data': bufer_data})
+    try:
+        if event.modifiers[0] == 'ctrl' and event.name == 'c':
+            bufer_data = root.clipboard_get()
+            adress = f'http://{SERVER_IP}:{SERVER_PORT}/'
+            requests.post(adress, json={'data': bufer_data})
+    except requests.exceptions.ConnectionError as e:
+            print(e)
+            messagebox.showerror(title='Ошибка', message='Не удается подключится к хосту',)
+            root.destroy()
+    except IndexError:
+        pass
 
 def main():
     global root, SERVER_IP, SERVER_PORT
 
     config = configparser.ConfigParser()
     config.read('main_settings.conf')
-    SHOW_WINDOW = config['Window']['SHOW_WINDOW']
-    SERVER_IP = config['Server']['SERVER_IP']
-    SERVER_PORT = config['Server']['SERVER_PORT']
+    SHOW_WINDOW = config['WINDOW']['SHOW_WINDOW']
+    SERVER_IP = config['SERVER']['SERVER_IP']
+    SERVER_PORT = config['SERVER']['SERVER_PORT']
 
     root = Tk()
     root.title('Main')
     root.geometry('200x0')
+    root.resizable(width=False, height=False)
     root.wm_attributes('-alpha', float(SHOW_WINDOW))
     root.wm_attributes('-topmost', True)
-
-    keyboard.hook_key('c', send_data)
-
+    keyboard.hook(send_data)
     root.mainloop()
 
 if __name__ == '__main__':
-    main()
+    try: 
+        main()
+    except KeyError as e:
+        messagebox.showerror(
+            title='Ошибка',
+            message='Неправильно составлен или отсутствует файл main_settings.conf',
+        )
+    except ValueError as e:
+        messagebox.showerror(
+            title='Ошибка',
+            message='Неправильное значение параметров в файле main_settings.conf',
+        )
