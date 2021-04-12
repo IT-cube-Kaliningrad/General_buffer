@@ -1,3 +1,5 @@
 flask
 requests
 keyboard
+pyperclip
+bs4
