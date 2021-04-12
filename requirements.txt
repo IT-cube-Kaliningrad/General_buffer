@@ -3,3 +3,4 @@ requests
 keyboard
 pyperclip
 bs4
+lxml
