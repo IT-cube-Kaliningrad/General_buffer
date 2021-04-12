@@ -13,8 +13,6 @@ def send_data(event):
             print(e)
             messagebox.showerror(title='Ошибка', message='Не удается подключится к хосту',)
             root.destroy()
-    except IndexError:
-        pass
 
 def main():
     global root, SERVER_IP, SERVER_PORT
