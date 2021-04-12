@@ -4,7 +4,7 @@ import requests
 import configparser
 
 
-def send_data(event):
+def send_data():
     try:
         bufer_data = root.clipboard_get()
         adress = f'http://{SERVER_IP}:{SERVER_PORT}/'
@@ -13,6 +13,17 @@ def send_data(event):
             print(e)
             messagebox.showerror(title='Ошибка', message='Не удается подключится к хосту',)
             root.destroy()
+
+def check_keys(event):
+    if event.modifiers:
+        try:
+            if event.modifiers[0] == 'ctrl' and event.name == 'c':
+                send_data()
+        except IndexError:
+            pass
+    else:
+        if event.name == 'c':
+            send_data()
 
 def main():
     global root, SERVER_IP, SERVER_PORT
@@ -29,7 +40,7 @@ def main():
     root.resizable(width=False, height=False)
     root.wm_attributes('-alpha', float(SHOW_WINDOW))
     root.wm_attributes('-topmost', True)
-    keyboard.hook_key('c', send_data)
+    keyboard.hook(check_keys)
     root.mainloop()
 
 if __name__ == '__main__':
