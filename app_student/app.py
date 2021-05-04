@@ -33,7 +33,6 @@ def get_data():
                         copy()
                     else:
                         show()
-                        root.wm_attributes('-alpha', 0.0)
             else:
                 messagebox.showerror(
                 title='Ошибка', message='Данные не обнаружены',
@@ -46,18 +45,16 @@ def get_data():
         time.sleep(1)
 
 
-def copy():
+def copy(root=None):
     pyperclip.copy(bufer_text)
+    if root: root.wm_attributes('-alpha', 0.0)
+
+
+def main_auto():
+    get_data()
 
 def main():
-    global root, label_data, SERVER_IP, SERVER_PORT, AUTOCOPY
-
-    config = configparser.ConfigParser()
-    config.read('settings.conf')
-    SERVER_IP = config['SERVER']['SERVER_IP']
-    SERVER_PORT = config['SERVER']['SERVER_PORT']
-
-    AUTOCOPY = config['APP']['AUTOCOPY']
+    global root, label_data
 
     root = tk.Tk()
     root.title('App')
@@ -69,7 +66,7 @@ def main():
     label_data = tk.Label(root, justify='left')
     label_data.grid(row=0, column=0, sticky='W')
 
-    button_copy_data = tk.Button(root, text='Копировать', command=copy)
+    button_copy_data = tk.Button(root, text='Копировать', command=lambda: copy(root))
     button_copy_data.grid(row=1, column=0, sticky='SW')
 
     thread_data = threading.Thread(target=get_data, daemon=True)
@@ -80,7 +77,15 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
+        config = configparser.ConfigParser()
+        config.read('settings.conf')
+        SERVER_IP = config['SERVER']['SERVER_IP']
+        SERVER_PORT = config['SERVER']['SERVER_PORT']
+
+        AUTOCOPY = int(config['APP']['AUTOCOPY'])
+
+        run = {0: main, 1: main_auto}
+        run[AUTOCOPY]()
     except KeyError as e:
         messagebox.showerror(
             title='Ошибка',
