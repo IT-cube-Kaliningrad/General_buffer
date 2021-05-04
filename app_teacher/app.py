@@ -3,9 +3,11 @@ from tkinter import messagebox
 import keyboard
 import requests
 import configparser
+import time
 
 
 def send_data():
+    time.sleep(0.1)
     try:
         bufer_data = root.clipboard_get()
         adress = f'http://{SERVER_IP}:{SERVER_PORT}/data'
