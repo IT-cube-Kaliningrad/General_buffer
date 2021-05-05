@@ -27,10 +27,10 @@ class App:
         root.title("App")
         root.geometry("200x0")
         root.resizable(width=False, height=False)
-        root.wm_attributes("-alpha", SHOW_WINDOW)
+        root.wm_attributes("-alpha", self.SHOW_WINDOW)
         root.wm_attributes("-topmost", True)
 
-        keyboard.add_hotkey("ctrl+c", send_data)
+        keyboard.add_hotkey("ctrl+c", self.send_data)
 
         root.mainloop()
     
@@ -38,7 +38,7 @@ class App:
         time.sleep(0.1)
         try:
             bufer_data = self.root.clipboard_get()
-            adress = f"http://{SERVER_IP}:{SERVER_PORT}/data"
+            adress = f"http://{self.SERVER_IP}:{self.SERVER_PORT}/data"
             post = requests.post(adress, json={"data": bufer_data})
             if not post.ok:
                 self.error("Данные не отправлены")

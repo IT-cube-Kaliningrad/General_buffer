@@ -70,7 +70,7 @@ class App:
         msg.showerror("Ошибка", message)
 
     def show(self):
-        self.label_data['text'] = self.bufer_text[:MAX_CHARS]
+        self.label_data['text'] = self.bufer_text[:self.MAX_CHARS]
         self.root.wm_attributes('-alpha', 1.0)
 
     def copy(self, root=None):
