@@ -1,3 +1,2 @@
 pyperclip
-threading
 requests

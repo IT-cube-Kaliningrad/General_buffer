@@ -1,56 +1,54 @@
 import tkinter as tk
-from tkinter import messagebox
+import tkinter.messagebox as msg
 import keyboard
 import requests
 import configparser
 import time
 
 
-def send_data():
-    time.sleep(0.1)
-    try:
-        bufer_data = root.clipboard_get()
-        adress = f'http://{SERVER_IP}:{SERVER_PORT}/data'
-        res = requests.post(adress, json={'data': bufer_data})
-        if not res.ok:
-            messagebox.showerror(
-                title='Ошибка', message='Данные не отправлены',
-            )
-    except requests.exceptions.ConnectionError as e:
-        messagebox.showerror(
-            title='Ошибка', message='Не удается подключится к хосту',
-        ); print(e)
+class App:
+    def __init__(self):
+        config = configparser.ConfigParser()
+        config.read("settings.conf")
+
+        try:
+            self.SHOW_WINDOW = float(config["WINDOW"]["SHOW_WINDOW"])
+            self.SERVER_IP = config["SERVER"]["SERVER_IP"]
+            self.SERVER_PORT = int(config["SERVER"]["SERVER_PORT"])
+        except KeyError as e:
+            error("Неправильно составлен или отсутствует файл settings.conf")
+            print(e)
+        except ValueError as e:
+            error("Неправильное значение параметров в файле settings.conf")
+            print(e)
+
+        self.root = tk.Tk()
+        root = self.root
+        root.title("App")
+        root.geometry("200x0")
+        root.resizable(width=False, height=False)
+        root.wm_attributes("-alpha", SHOW_WINDOW)
+        root.wm_attributes("-topmost", True)
+
+        keyboard.add_hotkey("ctrl+c", send_data)
+
+        root.mainloop()
+    
+    def send_data(self):
+        time.sleep(0.1)
+        try:
+            bufer_data = self.root.clipboard_get()
+            adress = f"http://{SERVER_IP}:{SERVER_PORT}/data"
+            post = requests.post(adress, json={"data": bufer_data})
+            if not post.ok:
+                self.error("Данные не отправлены")
+                print(adress, post.status_code)
+        except requests.exceptions.ConnectionError as e:
+            self.error("Не удается подключится к хосту")
+            print(e)
+
+    def error(self, message): msg.showerror("Ошибка", message)
 
 
-def main():
-    global root, SERVER_IP, SERVER_PORT
-
-    config = configparser.ConfigParser()
-    config.read('settings.conf')
-    SHOW_WINDOW = config['WINDOW']['SHOW_WINDOW']
-    SERVER_IP = config['SERVER']['SERVER_IP']
-    SERVER_PORT = config['SERVER']['SERVER_PORT']
-
-    root = tk.Tk()
-    root.title('App')
-    root.geometry('200x0')
-    root.resizable(width=False, height=False)
-    root.wm_attributes('-alpha', float(SHOW_WINDOW))
-    root.wm_attributes('-topmost', True)
-    keyboard.add_hotkey('ctrl+c', send_data)
-    root.mainloop()
-
-
-if __name__ == '__main__':
-    try:
-        main()
-    except KeyError as e:
-        messagebox.showerror(
-            title='Ошибка',
-            message='Неправильно составлен или отсутствует файл settings.conf',
-        ); print(e)
-    except ValueError as e:
-        messagebox.showerror(
-            title='Ошибка',
-            message='Неправильное значение параметров в файле settings.conf',
-        ); print(e)
+if __name__ == "__main__":
+    App()
