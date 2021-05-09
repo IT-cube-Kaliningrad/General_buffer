@@ -1,7 +1,7 @@
 @echo off
 : Переменные окружения
 :   FLASK
-    set FLASK_APP=server/server.py
+    set FLASK_APP=server.py
     set FLASK_ENV=development
     set FLASK_DEBUG=0
 :   SERVER
