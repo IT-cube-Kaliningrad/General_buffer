@@ -2,7 +2,6 @@ import threading
 import tkinter as tk
 import tkinter.messagebox as msg
 import configparser
-import keyboard
 import socket
 import time
 
@@ -46,9 +45,7 @@ class Server(socket.socket):
 
 class App:
     def __init__(self):
-        self.MAX_COUNT_CHAR = 60
         self.buffer_text = None
-
         config = configparser.ConfigParser()
         config.read("settings.conf")
         try:
@@ -81,9 +78,6 @@ class App:
                 self.text_data = tk.Text(self.root, text=self.buffer_text, state="disabled")
                 self.text_data.config(bd=0, highlightthickness=0)
                 self.text_data.pack(expand=True, fill="both")
-
-        keyboard.add_hotkey("ctrl+c", self._send_data)
-        keyboard.add_hotkey("ctrl+x", self._send_data)
 
         threading.Thread(target=self.check_buffer, daemon=True).start()
         threading.Thread(target=self.server.start, daemon=True).start()
