@@ -1,10 +1,8 @@
 import tkinter as tk
 import tkinter.messagebox as msg
-from tkinter.constants import END
 import socket
 import configparser
 import threading
-import pyperclip
 
 
 class Client(socket.socket):
@@ -38,35 +36,35 @@ class App:
             self.AUTOCOPY = int(config["APP"]["AUTOCOPY"])
 
             self.client = Client(SERVER_IP, SERVER_PORT)
-
-            (self._gui, self._auto_data)[self.AUTOCOPY]()
         except KeyError as e:
             self._error("Неправильно составлен или отсутствует файл settings.conf", error=e)
         except ValueError as e:
             self._error("Неправильное значение параметров в файле settings.conf", error=e)
-    
-    def _gui(self):
+
         self.root = tk.Tk()
-        root = self.root
-        root.title("App")
-        root.columnconfigure(0, weight=True)
-        root.rowconfigure(0, weight=True)
-        root.geometry(f"300x150+{root.winfo_screenwidth() - 300}+0")
-        root.wm_attributes("-topmost", True)
-        root.withdraw()
+        if not self.AUTOCOPY:
+            root = self.root
+            root.title("App")
+            root.columnconfigure(0, weight=True)
+            root.rowconfigure(0, weight=True)
+            root.geometry(f"300x150+{root.winfo_screenwidth() - 300}+0")
+            root.wm_attributes("-topmost", True)
+            self.root.withdraw()
 
-        self.text_data = tk.Text(self.root)
-        self.text_data.insert(0.0, self.text_data)
-        self.text_data.config(bd=0, highlightthickness=0, state="disabled")
-        self.text_data.grid(row=0, column=0, sticky="NSWE")
+            self.text_data = tk.Text(self.root)
+            self.text_data.insert(0.0, self.text_data)
+            self.text_data.config(bd=0, highlightthickness=0, state="disabled")
+            self.text_data.grid(row=0, column=0, sticky="NSWE")
 
-        button_copy_data = tk.Button(root, text="Копировать", command=self._copy)
-        button_copy_data.grid(row=1, column=0, sticky="WE")
+            button_copy_data = tk.Button(root, text="Копировать", command=self._copy)
+            button_copy_data.grid(row=1, column=0, sticky="WE")
 
-        threading.Thread(target=self._auto_data, daemon=True).start()
+            threading.Thread(target=self._auto_data, daemon=True).start()
 
-        root.mainloop()
-    
+            root.mainloop()
+            exit()
+        self._auto_data()
+        
     def _auto_data(self):
         while True:
             data = self.client.listen()
@@ -83,8 +81,8 @@ class App:
         self.root.deiconify()
 
     def _copy(self):
-        pyperclip.copy(self.bufer_text)
-        if "root" in dir(self): self.root.withdraw()
+        self.root.clipboard_append(self.bufer_text)
+        self.root.withdraw()
     
     def _error(self, message, error=None):
         msg.showerror("Ошибка", message)
