@@ -16,7 +16,7 @@ class Client(socket.socket):
             print(e, f"\nНе удается подключиться к серверу {':'.join(map(str, address))}")
             exit()
     
-    def listen(self, size=1024):
+    def get_data(self, size=1024):
         data = self.recv(size).decode("utf-8")
         if data and not "¤" in data:
             return data
@@ -49,35 +49,35 @@ class App:
             root.rowconfigure(0, weight=True)
             root.geometry(f"300x150+{root.winfo_screenwidth() - 300}+0")
             root.wm_attributes("-topmost", True)
-            self.root.withdraw()
+            root.withdraw()
 
             self.text_data = tk.Text(self.root)
             self.text_data.insert(0.0, self.text_data)
             self.text_data.config(bd=0, highlightthickness=0, state="disabled")
             self.text_data.grid(row=0, column=0, sticky="NSWE")
 
-            button_copy_data = tk.Button(root, text="Копировать", command=self._copy)
-            button_copy_data.grid(row=1, column=0, sticky="WE")
+            tk.Button(root, text="Копировать", command=self._copy).grid(row=1, column=0, sticky="WE")
 
             threading.Thread(target=self._auto_data, daemon=True).start()
 
             root.mainloop()
             exit()
+
         self._auto_data()
         
     def _auto_data(self):
         while True:
-            data = self.client.listen()
+            data = self.client.get_data()
             if data and data != self.bufer_text:
                 self.bufer_text = data
                 (self._show, self._copy)[self.AUTOCOPY]()
 
     def _show(self):
         self.root.lift()
-        self.text_data.configure(state="normal")
-        self.text_data.delete(1.0, "end")
-        self.text_data.insert(1.0, self.bufer_text)
-        self.text_data.configure(state="disabled")
+        self.text_data["state"] = "normal"
+        self.text_data.delete(0.0, "end")
+        self.text_data.insert(0.0, self.bufer_text)
+        self.text_data["state"] = "disabled"
         self.root.deiconify()
 
     def _copy(self):
