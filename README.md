@@ -4,7 +4,7 @@
 ```shell
 git clone https://github.com/IT-cube-Kaliningrad/General_buffer.git
 ```
-2. Пререйдите в корень проекта и установите библиотеки из ```requirements.txt``` ->
+2. Перейдите в корень проекта и установите библиотеки из ```requirements.txt``` ->
 ```shell
 python -m pip install -r requirements.txt
 ```
