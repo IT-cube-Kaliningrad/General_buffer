@@ -1,5 +1,6 @@
 # General Buffer
 ## Установка проекта
+***Примечание: проект может стабильно работать только с Python версией не ниже 3.5!***
 1. Загрузите удаленный GitHub репозиторий ->
 ```shell
 git clone https://github.com/IT-cube-Kaliningrad/General_buffer.git
