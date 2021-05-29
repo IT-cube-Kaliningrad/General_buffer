@@ -1,4 +1,4 @@
-# IT-Cube_Project
+# General Buffer
 ## Установка проекта
 1. Загрузите удаленный GitHub репозиторий ->
 ```shell
