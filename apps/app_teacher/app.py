@@ -103,6 +103,7 @@ class App:
     
     def check_buffer(self):
         while True:
+            time.sleep(0.1)
             try:
                 self.server.send_data("¤")
                 clipboard_text = self.root.clipboard_get()
@@ -113,7 +114,6 @@ class App:
                 continue
 
     def _send_buffer(self):
-        time.sleep(0.1)
         self.buffer_text = self.root.clipboard_get()
         self.server.send_data(self.buffer_text)
         if self.SHOW_DATA: 

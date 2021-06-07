@@ -23,19 +23,22 @@ class Client(socket.socket):
         except ConnectionError as e:
             print(f"{e}\nНе удается подключиться к серверу {':'.join(map(str, self.address))}")
             if self.warning_disconnect:
-                warning(f"Не удается подключиться к серверу {':'.join(map(str, self.address))}.\nВозможно, этот сервер не существует или превысили макс. кол-во подлкючений на нем")
+                warning(f"Не удается подключиться к серверу {':'.join(map(str, self.address))}.\nВозможно, этот сервер не существует или превышено макс. кол-во подлкючений на нем")
             exit()
-        print("ID:", self.getsockname()[1])
+        print(f"ID({self.getsockname()[1]})")
     
     def get_data(self, size=2048):
-        data = self.recv(size).decode("utf-8")
-        if data:
-            return data
-        return None
+        try:
+            data = self.recv(size).decode("utf-8")
+            if data:
+                return data
+            return None
+        except UnicodeDecodeError:
+            pass
 
 class App:
     def __init__(self):
-        self.bufer_text = ""
+        self.buffer_text = "Новые данные отсутствуют"
 
         self.config = configparser.ConfigParser()
         self.config.read(os.path.split(__file__)[0] + "/settings.conf")
@@ -56,17 +59,16 @@ class App:
 
         self.root = tk.Tk()
         root = self.root
-        root.title("App")
+        root.title(f"ID({self.client.getsockname()[1]})")
         root.geometry("300x0")
         root.wm_attributes("-topmost", True)
         if not self.AUTOCOPY:
             root.columnconfigure(0, weight=True)
             root.rowconfigure(0, weight=True)
             root.geometry(f"300x150+{root.winfo_screenwidth() - 300}+0")
-            root.withdraw()
 
             self.text_data = tk.Text(self.root)
-            self.text_data.insert(0.0, self.text_data)
+            self.text_data.insert(0.0, self.buffer_text)
             self.text_data.config(bd=0, highlightthickness=0, state="disabled")
             self.text_data.grid(row=0, column=0, sticky="NSWE")
 
@@ -79,12 +81,12 @@ class App:
         while True:
             try:
                 self.client.send(b"check")
-                data = self.client.get_data() or self.bufer_text
-                if not "¤" in data and data != self.bufer_text:
-                    self.bufer_text = data
+                data = self.client.get_data() or self.buffer_text
+                if not "¤" in data and data != self.buffer_text:
+                    self.buffer_text = data
                     if self.AUTOCOPY:
                         self.root.clipboard_clear()
-                        self.root.clipboard_append(self.bufer_text)
+                        self.root.clipboard_append(self.buffer_text)
                     else:
                         self._show()
             except ConnectionError as e:
@@ -97,13 +99,13 @@ class App:
         self.root.lift()
         self.text_data["state"] = "normal"
         self.text_data.delete(0.0, "end")
-        self.text_data.insert(0.0, self.bufer_text)
+        self.text_data.insert(0.0, self.buffer_text)
         self.text_data["state"] = "disabled"
         self.root.deiconify()
 
     def _copy(self):
         self.root.clipboard_clear()
-        self.root.clipboard_append(self.bufer_text)
+        self.root.clipboard_append(self.buffer_text)
         self.root.withdraw()
 
 if __name__ == "__main__":
