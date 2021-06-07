@@ -35,10 +35,10 @@ class Client(socket.socket):
 
 class App:
     def __init__(self):
-        self.bufer_text = "NULL"
+        self.bufer_text = ""
 
         self.config = configparser.ConfigParser()
-        self.config.read("settings.conf")
+        self.config.read(os.path.split(__file__)[0] + "/settings.conf")
 
         try:
             self.SERVER_PORT = int(self.config["SERVER"]["SERVER_PORT"])
@@ -83,6 +83,7 @@ class App:
                 if not "¤" in data and data != self.bufer_text:
                     self.bufer_text = data
                     if self.AUTOCOPY:
+                        self.root.clipboard_clear()
                         self.root.clipboard_append(self.bufer_text)
                     else:
                         self._show()
@@ -101,6 +102,7 @@ class App:
         self.root.deiconify()
 
     def _copy(self):
+        self.root.clipboard_clear()
         self.root.clipboard_append(self.bufer_text)
         self.root.withdraw()
 

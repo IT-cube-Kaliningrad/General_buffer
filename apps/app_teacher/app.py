@@ -4,6 +4,7 @@ import socket
 import configparser
 import threading
 import time
+import os
 
 
 def warning(message):
@@ -54,7 +55,7 @@ class App:
     def __init__(self):
         self.buffer_text = None
         self.config = configparser.ConfigParser()
-        self.config.read("settings.conf")
+        self.config.read(os.path.split(__file__)[0] + "/settings.conf")
         try:
             self.SHOW_WINDOW = int(self.config["APP"]["SHOW_WINDOW"])
             self.SHOW_DATA = int(self.config["APP"]["SHOW_DATA"])
@@ -101,7 +102,6 @@ class App:
         self.root.mainloop()
     
     def check_buffer(self):
-        self.buffer_text = self.root.clipboard_get()
         while True:
             try:
                 self.server.send_data("¤")
@@ -120,7 +120,6 @@ class App:
             self._show_data()
 
     def _show_data(self):
-        #self.root.lift()
         self.text_data.configure(state="normal")
         self.text_data.delete(1.0, "end")
         self.text_data.insert(1.0, self.buffer_text)
