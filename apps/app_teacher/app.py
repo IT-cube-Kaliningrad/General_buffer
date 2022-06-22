@@ -51,6 +51,7 @@ class Server(socket.socket):
                     warning(f"ID({connection[1]}) закрыл соединение")
                 continue
 
+
 class App:
     def __init__(self):
         self.buffer_text = None
